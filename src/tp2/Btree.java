@@ -81,7 +81,7 @@ public class Btree {
 		Btree b = new Btree(4);
 		b.root = n9 ;
 		
-		System.out.println(b.search(10, n9));
+		System.out.println(b.search(79, n9));
 		
 
 	}
@@ -102,7 +102,7 @@ public class Btree {
 				break;
 			}
 			
-			else if(n.getMaxValeur().filsD != null) {
+			else if(n.getMaxValeur().filsD != null && v.getValeur() == n.getMaxValeur().valeur) {
 				b = search(i,n.getMaxValeur().filsD);
 				break ;
 			}
