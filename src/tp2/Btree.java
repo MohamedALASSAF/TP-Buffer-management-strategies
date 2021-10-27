@@ -91,18 +91,25 @@ public class Btree {
 		boolean b = false ;
 		
 		for(Valeur v : n.valeurs ) {
+			
 			if (i == v.getValeur()) {
-				return true ;
+				b = true ;
+				break ;
 				
 			}
 			else if(v.getValeur() > i && v.filsG != null) {
 				b = search(i, v.filsG);
+				break;
 			}
+			
+			else if(n.getMaxValeur().filsD != null) {
+				b = search(i,n.getMaxValeur().filsD);
+				break ;
+			}
+			
 		}
 		
-		if(n.getMaxValeur().filsD != null) {
-			b = search(i,n.getMaxValeur().filsD);
-		}
+		
 		
 		return b ;
 	}
