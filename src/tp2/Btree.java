@@ -14,7 +14,7 @@ public class Btree {
 	public static void main(String[] args) {
 		int m = 5  ;
 		
-		
+		/*
 		//Node n1 = new Node(null,m,null ) ;
 		ArrayList<Valeur> v1 = new ArrayList<>();
 		v1.add(new Valeur(10, null, null) ) ;
@@ -80,13 +80,15 @@ public class Btree {
 		
 		Btree b = new Btree(4);
 		b.root = n9 ;
+		b.insert(36, b.root);
+		b.insert(34, n9);
+		System.out.println(b.searchNode(31, b.root));
 		
-		System.out.println(b.search(79, n9));
-		
+		*/
 
 	}
 	
-	public boolean search(int i, Node n) {
+	public boolean searchExist(int i, Node n) {
 		
 		boolean b = false ;
 		
@@ -98,21 +100,92 @@ public class Btree {
 				
 			}
 			else if(v.getValeur() > i && v.filsG != null) {
-				b = search(i, v.filsG);
+				b = searchExist(i, v.filsG);
 				break;
 			}
 			
 			else if(n.getMaxValeur().filsD != null && v.getValeur() == n.getMaxValeur().valeur) {
-				b = search(i,n.getMaxValeur().filsD);
+				b = searchExist(i,n.getMaxValeur().filsD);
 				break ;
 			}
 			
 		}
-		
-		
-		
+
 		return b ;
 	}
 
+	public Node searchNode(int i, Node n) {
+		
+		
+		for(Valeur v : n.valeurs ) {
 
+			 if (i == v.getValeur()) {
+				return null ;
+
+			}
+			 
+			 else if ( v.getValeur() == n.getMaxValeur().valeur && n.getMaxValeur().filsD == null && n.getMaxValeur().filsG == null ) {
+				 return n ;
+				}
+			 
+			else if(v.getValeur() > i && v.filsG != null) {
+				return  searchNode(i, v.filsG);
+				
+			}
+			
+			else if(n.getMaxValeur().filsD != null && v.getValeur() == n.getMaxValeur().valeur) {
+				return  searchNode(i,n.getMaxValeur().filsD);
+				
+			}
+			
+
+			
+		}
+
+		return null ;
+	}
+
+	
+	public void insert(int i, Node n) {
+		
+		Node node = searchNode(i, n) ;
+		
+		if(node != null) {
+			
+			if(!node.isFull()) {
+				insertNotFull(node, i);
+			}
+			
+			else {
+				
+				int median = node.getMedian(i);
+				insertFull(node.pere,median);
+				
+			}
+			
+		}
+		
+	}
+	
+	private void insertFull(Node pere, int median) {
+	
+		
+	}
+
+	public void insertNotFull(Node n, int i) {
+		for (Valeur v : n.valeurs) {
+			if(v.getValeur() > i ) {
+				
+				int index = n.valeurs.indexOf(v) ;
+				n.valeurs.add(index, new Valeur(i, null,null));
+				break ;
+			}
+			else if (v.getValeur() == n.getMaxValeur().valeur) {
+				n.valeurs.add( new Valeur(i, null,null));
+				break ;
+			}
+		}
+	}
+	
+	
 }

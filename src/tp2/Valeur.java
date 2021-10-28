@@ -31,6 +31,13 @@ public class Valeur {
 		this.filsG = filsG;
 	}
 	
+	@Override
+	public String toString() {
+		return  " "+ valeur ;
+	}
+	
+	
+	
 
 	
 
