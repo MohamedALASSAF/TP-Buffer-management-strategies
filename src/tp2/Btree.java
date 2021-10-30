@@ -113,12 +113,7 @@ public class Btree {
 		b.insert(68, b.root);
 		b.insert(60, b.root);
 		b.insert(65, b.root);
-		/*
-		
 
-		*/
-		
-		//System.out.println(b.searchNode(41, b.root));
 		System.out.println(b.root);
 
 
@@ -133,9 +128,7 @@ public class Btree {
 		System.out.println(b.root.getValeurs().get(0).getFilsD().getValeurs().get(1).getFilsG());
 		System.out.println(b.root.getValeurs().get(0).getFilsD().getValeurs().get(1).getFilsD()); //probleme
 		
-		//System.out.println(b.root.getValeurs().get(1).getFilsG());
-		//System.out.println(b.root.getValeurs().get(1).getFilsD());
-		//System.out.println(b.searchNode(46, b.root));
+
 		
 		
 	}
