@@ -2,22 +2,32 @@ package tp2;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.LinkedList;
 
 public class Node {
 	
-	Node pere ;
-	int m ;
-	ArrayList<Valeur> valeurs ; 
+	private Valeur pere ;
+	private Node nodePere ;
+	private int m ;
+	private LinkedList<Valeur> valeurs ; 
 
+	private boolean isRoot ;
 	
-	
-	public Node(Node pere,  int m, ArrayList<Valeur> valeurs) {
-
+	public Node(Valeur pere,  int m, LinkedList<Valeur> valeurs, Node nodePere ) {
+		this.nodePere = nodePere ;
 		this.pere = pere;
 		this.m = m;
 		this.valeurs = valeurs;
 	}
-
+	
+	public Node(int m) {
+		this.m = m ;
+		this.nodePere = null ;
+		this.pere = null ;
+		this.valeurs = new LinkedList<>();
+	}
+	
 	public boolean search(int i) {
 		
 		for(Valeur v : valeurs ) {
@@ -45,9 +55,9 @@ public class Node {
 		return false ;
 	}
 	
-	public int getMedian(int i) {
+	public int getValMedian(int i) {
 		int millieu = Math.round(((float)m)/2) ;
-		ArrayList<Integer> listValeurs = new ArrayList<>();	
+		LinkedList<Integer> listValeurs = new LinkedList<>();	
 		for(Valeur v : this.valeurs) {
 			listValeurs.add(v.getValeur()) ;
 		}
@@ -58,10 +68,52 @@ public class Node {
 	}
 	
 	public boolean isLeaf() {
-		if(valeurs.get(0).filsG == null ) {
+		if(valeurs.get(0).getFilsD() == null ) {
 			return true ;
 		}
 		return false ; 
 	}
+
+	public Valeur getPere() {
+		return pere;
+	}
+
+	public void setPere(Valeur pere) {
+		this.pere = pere;
+	}
+
+	public Node getNodePere() {
+		return nodePere;
+	}
+
+	public void setNodePere(Node nodePere) {
+		this.nodePere = nodePere;
+	}
+
+	public int getM() {
+		return m;
+	}
+
+	public void setM(int m) {
+		this.m = m;
+	}
+
+	public LinkedList<Valeur> getValeurs() {
+		return valeurs;
+	}
+
+	public void setValeurs(LinkedList<Valeur> valeurs) {
+		this.valeurs = valeurs;
+	}
+
+	public boolean isRoot() {
+		return isRoot;
+	}
+
+	public void setRoot(boolean isRoot) {
+		this.isRoot = isRoot;
+	}
+	
+	
 
 }

@@ -1,9 +1,9 @@
 package tp2;
 
 public class Valeur {
-	int valeur ;
-	Node filsD ;
-	Node filsG ;
+	private int valeur ;
+	private Node filsD ;
+	private Node filsG ;
 	
 	
 	

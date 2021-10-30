@@ -1,14 +1,15 @@
 package tp2;
 
-import java.util.ArrayList;
+
+import java.util.LinkedList;
 
 public class Btree {
 	
-	Node root ;
-	int m ;
+	private Node root ;
+	private static int m = 5 ;
 	
-	public Btree ( int m) {
-		this.m = m ;
+	public Btree (  ) {
+		this.root = new Node(m) ;
 	}
 	
 	public static void main(String[] args) {
@@ -85,27 +86,31 @@ public class Btree {
 		System.out.println(b.searchNode(31, b.root));
 		
 		*/
-
+		Btree b = new Btree() ;
+		b.root.setRoot(true);
+		b.insert(10, b.root);
+		System.out.println(b.searchNode(1, b.root));
 	}
+	
 	
 	public boolean searchExist(int i, Node n) {
 		
 		boolean b = false ;
 		
-		for(Valeur v : n.valeurs ) {
+		for(Valeur v : n.getValeurs() ) {
 			
 			if (i == v.getValeur()) {
 				b = true ;
 				break ;
 				
 			}
-			else if(v.getValeur() > i && v.filsG != null) {
-				b = searchExist(i, v.filsG);
+			else if(v.getValeur() > i && v.getFilsG() != null) {
+				b = searchExist(i, v.getFilsG());
 				break;
 			}
 			
-			else if(n.getMaxValeur().filsD != null && v.getValeur() == n.getMaxValeur().valeur) {
-				b = searchExist(i,n.getMaxValeur().filsD);
+			else if(n.getMaxValeur().getFilsD() != null && v.getValeur() == n.getMaxValeur().getValeur()) {
+				b = searchExist(i,n.getMaxValeur().getFilsD());
 				break ;
 			}
 			
@@ -114,27 +119,31 @@ public class Btree {
 		return b ;
 	}
 
+	
 	public Node searchNode(int i, Node n) {
 		
+		if(n.isRoot()) {
+			return n ;
+		}
 		
-		for(Valeur v : n.valeurs ) {
+		for(Valeur v : n.getValeurs() ) {
 
 			 if (i == v.getValeur()) {
 				return null ;
 
 			}
 			 
-			 else if ( v.getValeur() == n.getMaxValeur().valeur && n.getMaxValeur().filsD == null && n.getMaxValeur().filsG == null ) {
+			 else if ( v.getValeur() == n.getMaxValeur().getValeur() && n.getMaxValeur().getFilsD() == null && n.getMaxValeur().getFilsG() == null ) {
 				 return n ;
 				}
 			 
-			else if(v.getValeur() > i && v.filsG != null) {
-				return  searchNode(i, v.filsG);
+			else if(v.getValeur() > i && v.getFilsG() != null) {
+				return  searchNode(i, v.getFilsG());
 				
 			}
 			
-			else if(n.getMaxValeur().filsD != null && v.getValeur() == n.getMaxValeur().valeur) {
-				return  searchNode(i,n.getMaxValeur().filsD);
+			else if(n.getMaxValeur().getFilsD() != null && v.getValeur() == n.getMaxValeur().getValeur()) {
+				return  searchNode(i,n.getMaxValeur().getFilsD());
 				
 			}
 			
@@ -146,46 +155,94 @@ public class Btree {
 	}
 
 	
+	
 	public void insert(int i, Node n) {
-		
+		Valeur newV = new Valeur(i, null,null) ;
 		Node node = searchNode(i, n) ;
 		
 		if(node != null) {
-			
-			if(!node.isFull()) {
-				insertNotFull(node, i);
-			}
-			
-			else {
+			insertLeaf(node, newV);
 				
-				int median = node.getMedian(i);
-				insertFull(node.pere,median);
-				
-			}
-			
-		}
-		
+		}	
 	}
 	
-	private void insertFull(Node pere, int median) {
-	
+	private void insertNotLeaf(Valeur pere, Valeur median, Node nodePere) {
+		
+		if(! nodePere.isFull()) {
+			insertNotFull(nodePere.getValeurs(), median);
+		}
+		else {
+			Valeur nMedian = split(median, nodePere.getValeurs(), pere, nodePere) ;
+			insertNotLeaf(nodePere.getPere(),nMedian, nodePere.getNodePere());
+		}
 		
 	}
 
-	public void insertNotFull(Node n, int i) {
-		for (Valeur v : n.valeurs) {
-			if(v.getValeur() > i ) {
-				
-				int index = n.valeurs.indexOf(v) ;
-				n.valeurs.add(index, new Valeur(i, null,null));
-				break ;
-			}
-			else if (v.getValeur() == n.getMaxValeur().valeur) {
-				n.valeurs.add( new Valeur(i, null,null));
-				break ;
+	public void insertLeaf(Node n, Valeur newV) {
+		
+		if(!n.isFull()) {
+			insertNotFull(n.getValeurs(), newV);
+		}
+		else {
+			Valeur median = split(newV, n.getValeurs(), n.getPere(), n) ;
+			insertNotLeaf(n.getPere(),median, n.getNodePere());
+		}
+	}
+	
+	public static Valeur split (Valeur v , LinkedList<Valeur> valeurs, Valeur pere, Node nodePere) {
+		ajout(v, valeurs);
+		
+		Valeur median = popMedian(valeurs) ;
+		
+		if(median.getValeur() < pere.getValeur() ) {
+			
+			median.setFilsG(new Node(median,m, (LinkedList<Valeur>) valeurs.subList(0, valeurs.size()/2), nodePere ));
+			valeurs = (LinkedList<Valeur>) valeurs.subList(valeurs.size()/2, valeurs.size()) ;
+		}
+		else {
+			pere.setFilsD(null);
+			median.setFilsG(new Node(median,m, (LinkedList<Valeur>) valeurs.subList(0, valeurs.size()/2),nodePere));
+			median.setFilsD(new Node(median,m, (LinkedList<Valeur>) valeurs.subList(valeurs.size()/2, valeurs.size()), nodePere));
+		}
+		
+		return median ;
+			
+	}
+	
+	public static void ajout (Valeur v , LinkedList<Valeur> valeurs) {
+		if(v.getValeur()> valeurs.getLast().getValeur()) {
+			valeurs.add(valeurs.indexOf(valeurs.getLast()), v);
+		}
+		else {
+			for(Valeur va : valeurs) {
+				if(v.getValeur() < va.getValeur()) {
+					valeurs.add(valeurs.indexOf(va), v);
+					break;
+				}
 			}
 		}
 	}
 	
+	public static Valeur popMedian(LinkedList<Valeur> valeurs) {
+		int millieu = Math.round(((float)m)/2) ;
+			
+		return valeurs.remove(valeurs.indexOf(valeurs.get (millieu-1))) ; 
+		
+	}
 	
+	public static void insertNotFull (LinkedList<Valeur> valeurs , Valeur newV) {
+		for (Valeur v : valeurs) {
+			if(v.getValeur() > newV.getValeur() ) {
+				
+				int index = valeurs.indexOf(v) ;
+				valeurs.add(index, newV);
+				break ;
+			}
+			else if (v.getValeur() == valeurs.getLast().getValeur()) {
+				valeurs.add( newV);
+				break ;
+			}
+		}
+		
+	}
 }
