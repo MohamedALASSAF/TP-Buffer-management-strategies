@@ -1,11 +1,11 @@
 package tp2;
 
-import java.util.ArrayList;
+
 import java.util.Collections;
-import java.util.List;
+
 import java.util.LinkedList;
 
-public class Node {
+public class Node implements Cloneable{
 	
 	private Valeur pere ;
 	private Node nodePere ;
@@ -19,6 +19,7 @@ public class Node {
 		this.pere = pere;
 		this.m = m;
 		this.valeurs = valeurs;
+		this.isRoot = false ;
 	}
 	
 	public Node(int m) {
@@ -49,7 +50,7 @@ public class Node {
 	}
 	
 	public boolean isFull () {
-		if(valeurs.size() == m) {
+		if(valeurs.size() == m-1) {
 			return true ;
 		}
 		return false ;
@@ -112,6 +113,11 @@ public class Node {
 
 	public void setRoot(boolean isRoot) {
 		this.isRoot = isRoot;
+	}
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return super.clone();
 	}
 	
 	

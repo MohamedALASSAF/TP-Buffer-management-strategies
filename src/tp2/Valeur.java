@@ -1,6 +1,6 @@
 package tp2;
 
-public class Valeur {
+public class Valeur {  
 	private int valeur ;
 	private Node filsD ;
 	private Node filsG ;
@@ -36,6 +36,9 @@ public class Valeur {
 		return  " "+ valeur ;
 	}
 	
+
+	
+
 	
 	
 
