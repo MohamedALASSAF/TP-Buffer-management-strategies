@@ -29,16 +29,7 @@ public class Node implements Cloneable{
 		this.valeurs = new LinkedList<>();
 	}
 	
-	public boolean search(int i) {
-		
-		for(Valeur v : valeurs ) {
-			if (i == v.getValeur()) {
-				return true ;
-			}
-		}
-		
-		return false ;
-	}
+
 	
 	public Valeur getMaxValeur() {
 		return valeurs.get(valeurs.size()-1);

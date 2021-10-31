@@ -113,24 +113,35 @@ public class Btree {
 		b.insert(68, b.root);
 		b.insert(60, b.root);
 		b.insert(65, b.root);
-
+		b.insert(32, b.root);
+		b.insert(33, b.root);
+		b.insert(38, b.root);
+		b.insert(39, b.root);
+		
+		b.insert(1, b.root);
+		b.insert(31, b.root);
+		b.insert(42,b.root);
 		System.out.println(b.root);
-
+		
 
 		System.out.println(b.root.getValeurs().get(0).getFilsG());
-		System.out.println(b.root.getValeurs().get(0).getFilsD());
+		System.out.println(b.root.getValeurs().get(1).getFilsG());
+		
+		System.out.println(b.root.getValeurs().get(0).getFilsG().getPere());
+		System.out.println(b.root.getValeurs().get(1).getFilsG().getPere());
 		
 		System.out.println(b.root.getValeurs().get(0).getFilsG().getValeurs().get(0).getFilsG());
 		System.out.println(b.root.getValeurs().get(0).getFilsG().getValeurs().get(1).getFilsG());
-		System.out.println(b.root.getValeurs().get(0).getFilsG().getValeurs().get(1).getFilsD()); //probleme
+		System.out.println(b.root.getValeurs().get(0).getFilsG().getValeurs().get(1).getFilsD());
 		
-		System.out.println(b.root.getValeurs().get(0).getFilsD().getValeurs().get(0).getFilsG());
-		System.out.println(b.root.getValeurs().get(0).getFilsD().getValeurs().get(1).getFilsG());
-		System.out.println(b.root.getValeurs().get(0).getFilsD().getValeurs().get(1).getFilsD()); //probleme
+		System.out.println(b.root.getValeurs().get(1).getFilsG().getValeurs().get(0).getFilsG());
+		System.out.println(b.root.getValeurs().get(1).getFilsG().getValeurs().get(1).getFilsG());
+		System.out.println(b.root.getValeurs().get(1).getFilsG().getValeurs().get(1).getFilsD());
+		
+		
+		
 		
 
-		
-		
 	}
 	
 	
@@ -194,7 +205,6 @@ public class Btree {
 
 		return null ;
 	}
-
 	
 	
 	public void insert(int i, Node n) {
@@ -211,7 +221,6 @@ public class Btree {
 		
 		
 		if(! nodePere.isFull()) {
-			
 			insertNotFull(nodePere.getValeurs(), median);
 		}
 		else {
@@ -224,7 +233,8 @@ public class Btree {
 				this.root = newRoot ;
 			}
 			else {
-				Valeur nMedian = split(median, nodePere.getValeurs(), pere, nodePere) ;
+				System.out.println("PEREEEE :" + pere);
+				Valeur nMedian = split(median, nodePere.getValeurs(), nodePere.getPere(), nodePere) ;
 				insertNotLeaf(nodePere.getPere(),nMedian, nodePere.getNodePere());
 			}
 			
@@ -249,7 +259,6 @@ public class Btree {
 			}
 			else {
 				Valeur median = split(newV, n.getValeurs(), n.getPere(), n.getNodePere()) ;
-				
 				insertNotLeaf(n.getPere(),median, n.getNodePere());
 			}
 			
@@ -262,34 +271,44 @@ public class Btree {
 		Valeur median = popMedian(valeurs) ;
 		try {
 		if(median.getFilsG() != null ) {
-			
 			int i = Math.round(((float)m)/2) -2 ;
 			Object cloneFilsG = median.getFilsG().clone() ;
 			
 			if(cloneFilsG instanceof Node) {
 				valeurs.get(i).setFilsD((Node) cloneFilsG); 
+				valeurs.get(i).getFilsD().setPere(valeurs.get(i));
 			}
 		}
 		}
-		catch(CloneNotSupportedException e) {
-			System.err.println(e);
-		}
+		catch(CloneNotSupportedException e) { System.err.println(e); }
+		Node newFilsG =  new Node(median,m, new LinkedList<Valeur>( valeurs.subList(0, valeurs.size()/2)),nodePere );
+		Node newFilsD = new Node(median,m, new LinkedList<Valeur>(valeurs.subList(valeurs.size()/2, valeurs.size())), nodePere) ;
 		
 		if(pere == null) {
-			
-			median.setFilsG(new Node(median,m, new LinkedList<Valeur>( valeurs.subList(0, valeurs.size()/2)),nodePere ) );
-			median.setFilsD(new Node(median,m, new LinkedList<Valeur>(valeurs.subList(valeurs.size()/2, valeurs.size())), nodePere));
+			median.setFilsG(newFilsG);
+			median.setFilsD(newFilsD);
+			newPere(newFilsG);
+			newPere(newFilsD);
 		}
 		
 		else if(median.getValeur() < pere.getValeur() ) {
-			median.setFilsG(new Node(median,m, new LinkedList<Valeur>(valeurs.subList(0, valeurs.size()/2)), nodePere ));
+			System.out.println(" median : " + median);
+			System.out.println("median.getValeur() < pere.getValeur()");
+			System.out.println("valeurs : " + valeurs);
+			System.out.println("pere :" + pere);
+			median.setFilsG(newFilsG);
 			valeurs = new LinkedList<Valeur> (valeurs.subList(valeurs.size()/2, valeurs.size())) ;
+			pere.getFilsG().setValeurs(valeurs);
+			
+			
+			
 		}
 		else {
-
 			pere.setFilsD(null);
-			median.setFilsG(new Node(median,m, new LinkedList<Valeur>( valeurs.subList(0, valeurs.size()/2)),nodePere ) );
-			median.setFilsD(new Node(median,m, new LinkedList<Valeur>(valeurs.subList(valeurs.size()/2, valeurs.size())), nodePere));
+			median.setFilsG(newFilsG);
+			median.setFilsD(newFilsD);
+			
+
 		}
 		
 		return median ;
@@ -297,6 +316,20 @@ public class Btree {
 	}
 	
 
+	private static void newPere(Node n) {
+		for(Valeur v : n.getValeurs()) {
+			if(v.getFilsG() != null) {
+				v.getFilsG().setNodePere(n);
+				v.getFilsG().setPere(v);
+			}
+			if(v.getFilsD() != null) {
+				v.getFilsD().setNodePere(n);
+				v.getFilsD().setPere(v);
+			}	
+		}
+		
+		
+	}
 
 	public static void ajout (Valeur v , LinkedList<Valeur> valeurs) {
 		if(v.getValeur()> valeurs.getLast().getValeur()) {
