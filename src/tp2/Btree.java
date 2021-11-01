@@ -144,6 +144,9 @@ public class Btree {
 
 	}
 	
+	public Node getRoot() {
+		return this.root ;
+	}
 	
 	public boolean searchExist(int i, Node n) {
 		
