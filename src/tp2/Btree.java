@@ -20,14 +20,16 @@ public class Btree {
 		// v5.add(new Valeur(10, null, null));
 		b.root = new Node(null, null, m, v5);
 		ArrayList<Integer> test = new ArrayList<>(Arrays.asList(10, 15, 30, 27, 35, 40, 10, 45, 37, 20, 50, 55, 46, 71,
-				66, 74, 85, 90, 79, 78, 95, 25, 81, 68, 60, 65));
+				66, 74, 85, 90, 79, 78, 95, 25, 81, 68, 60, 65, 1));
 
 		ArrayList<Integer> test1 = new ArrayList<>(Arrays.asList(50, 55, 66, 68, 70, 71, 72, 73, 79, 81, 85, 90, 95));
 
 		ArrayList<Integer> test2 = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
 		for (int i : test) {
+
 			insert(i, b.root, null, true, null);
 		}
+		System.out.println("debut");
 		afficherTree(b.root);
 
 	}
@@ -114,16 +116,19 @@ public class Btree {
 	 * 
 	 */
 	public static void insert(int i, Node n, Node enfant, boolean islast, Valeur iValObject) {
+
 		if (n.valeurs.size() == 0) {
 			insertNotFull(n, i, iValObject);
 		} else {
 			// on récupère le node ou il faut inserer i
 			Node node = searchNode(i, n);
+
 			if (node != null) {
 				// si enfant est different de null cela veut dire que la valuer qu'on veut
 				// insérer avait un enfant et qu'on essaye d'inserer cette valeur dans son pere
 				// on est dans le cas donc ou n ici c'etait le pere de i
 				if (enfant != null) {
+
 					// ici on verifie si i doit être inserer ou non à la fin du node n
 					if (islast) {
 						// si oui le fils droit du dernier element de n devient le fils gauche de la
@@ -138,25 +143,32 @@ public class Btree {
 						// sinon cela veut dire que la valeur ne sera pas inserer à la fin du node et
 						// son fils gauche est donc l'enfant avec lequel il est venu
 						iValObject.filsG = enfant;
+
 					}
+
 					insertNotFull(n, i, iValObject);
 
 				}
 
-				if (!node.isFull() && iValObject == null) {
+				if (!node.isFull()) {
 					// si le node n'est pas plein , si iValObject == null cela veut dire que c'est
 					// l'insertion d'une nouvelle valeur dans l'abre et non pas celui d'une valeur
 					// venu d'un autre node
-					insertNotFull(node, i, null);
+					if (iValObject == null) {
+						insertNotFull(node, i, null);
+					}
 
 				} else {
+
 					// sinon si node est plein, on recupere la median pour le split
 					int median = node.getMedian(i);
 					insertNotFull(node, i, null);
+
 					int indexMedian = Math.round(((float) node.m) / 2) - 1;
 					Valeur medianValObject = getValObject(median, node);
 
 					if (node.pereNode != null) {
+
 						splitNode(median, medianValObject, indexMedian, node);
 					} else {
 						splitRoot(medianValObject, indexMedian, node);
@@ -225,8 +237,8 @@ public class Btree {
 	 * @param node            le node qu'il faut couper en 2
 	 */
 	public static void splitNode(int median, Valeur medianValObject, int indexMedian, Node node) {
+		node.pereNode = NodeOfVal(node.pere.valeur, root);
 		Valeur maxValuePere = node.pereNode.getMaxValeur();
-
 		if (maxValuePere.valeur > median) {
 			Node n2 = new Node(node.pereNode, medianValObject, node.m, subliste(node.valeurs, 0, indexMedian - 1));
 
@@ -236,9 +248,11 @@ public class Btree {
 				n2.getMaxValeur().filsD = medianValObject.filsG;
 
 			}
+
 			insert(median, node.pereNode, n2, false, medianValObject);
 
 		} else {
+
 			Node n2 = new Node(node.pereNode, medianValObject, node.m,
 					subliste(node.valeurs, indexMedian + 1, node.valeurs.size() - 1));
 
@@ -354,6 +368,37 @@ public class Btree {
 
 		}
 
+	}
+
+	public static Node NodeOfVal(int i, Node n) {
+
+		for (Valeur v : n.valeurs) {
+
+			if (i == v.getValeur()) {
+
+				return n;
+
+			}
+
+			else if (v.getValeur() == n.getMaxValeur().valeur && n.getMaxValeur().filsD == null
+					&& n.getMaxValeur().filsG == null) {
+				return n;
+			}
+
+			else if (v.getValeur() > i && v.filsG != null) {
+				return NodeOfVal(i, v.filsG);
+
+			}
+
+			else if (v.getValeur() == n.getMaxValeur().valeur && v.filsD != null) {
+
+				return NodeOfVal(i, v.filsD);
+
+			}
+
+		}
+
+		return null;
 	}
 
 }
