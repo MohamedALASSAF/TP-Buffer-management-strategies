@@ -68,4 +68,10 @@ public class Node {
 		return false;
 	}
 
+	public ArrayList<Valeur> getValeurs() {
+		
+		return this.valeurs;
+	}
+	
+
 }

@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class Btree {
 
-	static Node root;
+    public static Node root;
 	int m;
 
 	public Btree(int m) {
@@ -20,7 +20,7 @@ public class Btree {
 		// v5.add(new Valeur(10, null, null));
 		b.root = new Node(null, null, m, v5);
 		ArrayList<Integer> test = new ArrayList<>(Arrays.asList(10, 15, 30, 27, 35, 40, 10, 45, 37, 20, 50, 55, 46, 71,
-				66, 74, 85, 90, 79, 78, 95, 25, 81, 68, 60, 65, 1));
+				66, 74, 85, 90, 79, 78, 95, 25, 81, 68, 60, 65));
 
 		ArrayList<Integer> test1 = new ArrayList<>(Arrays.asList(50, 55, 66, 68, 70, 71, 72, 73, 79, 81, 85, 90, 95));
 
