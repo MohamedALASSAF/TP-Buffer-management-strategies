@@ -1,5 +1,7 @@
 package tp2;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class Btree {
@@ -68,7 +70,7 @@ public class Btree {
 		 * Btree b = new Btree(4); b.root = n9 ; b.insert(36, b.root); b.insert(34, n9);
 		 * System.out.println(b.searchNode(31, b.root));
 		 * 
-		 */
+		 
 		Btree b = new Btree();
 		b.root.setRoot(true);
 		b.insert(10, b.root);
@@ -119,6 +121,32 @@ public class Btree {
 		System.out.println(b.root.getValeurs().get(1).getFilsG().getValeurs().get(0).getFilsG());
 		System.out.println(b.root.getValeurs().get(1).getFilsG().getValeurs().get(1).getFilsG());
 		System.out.println(b.root.getValeurs().get(1).getFilsG().getValeurs().get(1).getFilsD());
+		
+		*/
+		Btree b = new Btree();
+		b.root.setRoot(true);
+		ArrayList<Integer> test1 = new ArrayList<>(Arrays.asList(50, 55, 66, 68, 70, 71, 72, 73, 79, 81, 85, 90, 95));
+		for (int i : test1) {
+
+			b.insert(i, b.root);
+		}
+		afficherTree(b.root);
+		
+	}
+	
+	public static void afficherTree(Node n) {
+		System.out.println(n);
+		for (Valeur v : n.getValeurs()) {
+
+			if (v.getFilsG() != null) {
+				afficherTree(v.getFilsG());
+
+			}
+			if (v.getFilsD() != null) {
+				afficherTree(v.getFilsD());
+			}
+
+		}
 
 	}
 
@@ -207,7 +235,6 @@ public class Btree {
 				newRoot.getValeurs().add(nMedian);
 				this.root = newRoot;
 			} else {
-				System.out.println("PEREEEE :" + pere);
 				Valeur nMedian = split(median, nodePere.getValeurs(), nodePere.getPere(), nodePere);
 				insertNotLeaf(nodePere.getPere(), nMedian, nodePere.getNodePere());
 			}
@@ -266,10 +293,6 @@ public class Btree {
 		}
 
 		else if (median.getValeur() < pere.getValeur()) {
-			System.out.println(" median : " + median);
-			System.out.println("median.getValeur() < pere.getValeur()");
-			System.out.println("valeurs : " + valeurs);
-			System.out.println("pere :" + pere);
 			median.setFilsG(newFilsG);
 			valeurs = new LinkedList<Valeur>(valeurs.subList(valeurs.size() / 2, valeurs.size()));
 			pere.getFilsG().setValeurs(valeurs);

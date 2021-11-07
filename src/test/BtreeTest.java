@@ -2,6 +2,8 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import org.junit.Assert;
@@ -14,35 +16,15 @@ import tp2.Valeur;
 class BtreeTest {
 
 	@Test
-	void insertTest() {
+	void insertTest1() {
 
 		Btree b = new Btree();
 		b.getRoot().setRoot(true);
-		b.insert(10, b.getRoot());
-		b.insert(15, b.getRoot());
-		b.insert(30, b.getRoot());
-		b.insert(27, b.getRoot());
-		b.insert(35, b.getRoot());
-		b.insert(40, b.getRoot());
-		b.insert(45, b.getRoot());
-		b.insert(37, b.getRoot());
-		b.insert(20, b.getRoot());
-		b.insert(50, b.getRoot());
-		b.insert(55, b.getRoot());
-		b.insert(46, b.getRoot());
-		b.insert(71, b.getRoot());
-		b.insert(66, b.getRoot());
-		b.insert(74, b.getRoot());
-		b.insert(85, b.getRoot());
-		b.insert(90, b.getRoot());
-		b.insert(79, b.getRoot());
-		b.insert(78, b.getRoot());
-		b.insert(95, b.getRoot());
-		b.insert(25, b.getRoot());
-		b.insert(81, b.getRoot());
-		b.insert(68, b.getRoot());
-		b.insert(60, b.getRoot());
-		b.insert(65, b.getRoot());
+		ArrayList<Integer> test = new ArrayList<>(Arrays.asList(10, 15, 30, 27, 35, 40, 10, 45, 37, 20, 50, 55, 46, 71,
+				66, 74, 85, 90, 79, 78, 95, 25, 81, 68, 60, 65));
+		for (int i : test) {
+			b.insert(i, b.getRoot());
+		}
 
 		LinkedList<Valeur> node1Values = new LinkedList<>();
 		node1Values.add(new Valeur(10, null, null));
@@ -102,6 +84,54 @@ class BtreeTest {
 
 		Assert.assertEquals(node7Values, b.getRoot().getValeurs().get(0).getFilsG().getValeurs());
 		Assert.assertEquals(node8Values, b.getRoot().getValeurs().get(0).getFilsD().getValeurs());
+
+		Assert.assertEquals(rootValues, b.getRoot().getValeurs()); // check root
+	}
+	
+	
+	@Test
+	void insertTest2() {
+
+		Btree b = new Btree();
+		b.getRoot().setRoot(true);
+		ArrayList<Integer> test1 = new ArrayList<>(Arrays.asList(50, 55, 66, 68, 70, 71, 72, 73, 79, 81, 85, 90, 95));
+		for (int i : test1) {
+			b.insert(i, b.getRoot());
+		}
+
+		LinkedList<Valeur> node1Values = new LinkedList<>();
+		node1Values.add(new Valeur(50, null, null));
+		node1Values.add(new Valeur(55, null, null));
+
+
+		LinkedList<Valeur> node2Values = new LinkedList<>();
+		node2Values.add(new Valeur(68, null, null));
+		node2Values.add(new Valeur(70, null, null));
+
+		LinkedList<Valeur> node3Values = new LinkedList<>();
+		node3Values.add(new Valeur(72, null, null));
+		node3Values.add(new Valeur(73, null, null));
+
+		LinkedList<Valeur> node4Values = new LinkedList<>();
+		node4Values.add(new Valeur(81, null, null));
+		node4Values.add(new Valeur(85, null, null));
+		node4Values.add(new Valeur(90, null, null));
+		node4Values.add(new Valeur(95, null, null));
+
+		LinkedList<Valeur> rootValues = new LinkedList<>();
+		rootValues.add(new Valeur(66, null, null));
+		rootValues.add(new Valeur(71, null, null));
+		rootValues.add(new Valeur(79, null, null));
+
+		Assert.assertEquals(node1Values,
+				b.getRoot().getValeurs().get(0).getFilsG().getValeurs());
+		Assert.assertEquals(node2Values,
+				b.getRoot().getValeurs().get(1).getFilsG().getValeurs());
+		Assert.assertEquals(node3Values,
+				b.getRoot().getValeurs().get(2).getFilsG().getValeurs());
+		Assert.assertEquals(node4Values,
+				b.getRoot().getValeurs().get(2).getFilsD().getValeurs());
+
 
 		Assert.assertEquals(rootValues, b.getRoot().getValeurs()); // check root
 	}
